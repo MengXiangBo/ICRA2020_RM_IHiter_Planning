@@ -164,6 +164,7 @@ roslaunch mrobot_gazebo navdemo1.launch
 <center>图7-3 路径点</center>   
 在地图上选取若干路径点作为全局路径规划的中间点，如图3所示，各个路径点用黑色空心圆圈表示，（其中包括加成/惩罚区域，用蓝色实心圆圈表示）每个路径点与邻近点之间可以直线移动，机器人运行过程中，给定机器人的路径规划终点，并从定位系统中获取机器人的当前位置作为起点。每次执行规划任务时，将起点和终点加入到路径点的集合中，并通过直线与障碍物的碰撞检测来确定起点和终点的邻点，红色实心圆圈为起点或终点，红色实线为通过碰撞检测的路径，红色虚线为未通过碰撞检测的路径，将红色实线加入到可行边的集合中。  
 用路径中相邻直线的角度值来评价平滑度，角度越小则越平滑，在原有的计算式中加入平滑度计算，为:  
+<img src="https://render.githubusercontent.com/render/math?math=rhs(u)=\min\limits_{s'\inSucc(u)}(c(u.s')+g(s')+\lambda\theta(s'))">
 
 <img src="https://latex.codecogs.com/svg.latex?\Large&space;rhs(u) = \min \limits_{s' \in Succ(u)} (c(u.s') + g(s') + \lambda \theta (s'))" title="" />  
 $$rhs(u) = \min \limits_{s' \in Succ(u)} (c(u.s') + g(s') + \lambda \theta (s'))$$  

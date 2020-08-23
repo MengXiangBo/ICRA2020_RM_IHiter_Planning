@@ -1,0 +1,6 @@
+float32[] vfPathPositionX
+float32[] vfPathPositionY
+float32[] vfConstraintPositionX
+float32[] vfConstraintPositionY
+---
+bool boSuccess

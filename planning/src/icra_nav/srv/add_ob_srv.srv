@@ -1,0 +1,6 @@
+int32 inFrom
+int32 inTo
+float32 flObstacleX
+float32 flObstacleY
+---
+bool boSuccess

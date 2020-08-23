@@ -1,0 +1,9 @@
+float32 flPathStartX
+float32 flPathStartY
+float32 flPathEndX
+float32 flPathEndY
+float32[] vfConstraintPositionX
+float32[] vfConstraintPositionY
+float32 flConstraintVelocity
+---
+bool boSuccess

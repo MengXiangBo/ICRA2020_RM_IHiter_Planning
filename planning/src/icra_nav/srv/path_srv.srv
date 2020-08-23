@@ -1,0 +1,5 @@
+float32[] vfPathPositionX
+float32[] vfPathPositionY
+uint32[] viPathIndex
+---
+bool boSuccess

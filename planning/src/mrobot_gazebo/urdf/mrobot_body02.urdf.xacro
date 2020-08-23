@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<robot name="mrobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Defining the colors used in this robot -->
+    <material name="Black">
+        <color rgba="0 0 0 1"/>
+    </material>
+
+    <material name="White">
+        <color rgba="1 1 1 1"/>
+    </material>
+
+    <material name="Blue">
+        <color rgba="0 0 1 1"/>
+    </material>
+
+    <material name="Red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+    <!-- PROPERTY LIST -->
+    <!--All units in m-kg-s-radians unit system -->
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+
+    <!-- Main body length, width, height and mass -->
+    <xacro:property name="base_mass"        value="0.5" /> 
+    <xacro:property name="base_link_radius" value="0.13"/>
+    <xacro:property name="base_link_length" value="0.005"/>
+
+    <xacro:property name="motor_x" value="-0.05"/>
+
+    <!-- Caster radius and mass -->
+    <xacro:property name="caster_radius"          value="0.016" /> 
+    <xacro:property name="caster_mass"            value="0.01" /> 
+    <xacro:property name="caster_joint_origin_x"  value="-0.12" />
+
+    <!-- Wheel radius, height and mass -->
+    <xacro:property name="wheel_radius" value="0.033" /> 
+    <xacro:property name="wheel_height" value="0.017" />
+    <xacro:property name="wheel_mass"   value="0.1" />
+
+    <!-- plate height and mass -->
+    <xacro:property name="plate_mass"   value="0.05"/>
+    <xacro:property name="plate_height" value="0.07"/>
+    <xacro:property name="standoff_x"   value="0.12"/>
+    <xacro:property name="standoff_y"   value="0.10"/>
+
+    <!-- Macro for inertia matrix -->
+    <xacro:macro name="sphere_inertial_matrix" params="m r">
+        <inertial>
+            <mass value="${m}" />
+            <inertia ixx="${2*m*r*r/5}" ixy="0" ixz="0"
+                iyy="${2*m*r*r/5}" iyz="0" 
+                izz="${2*m*r*r/5}" />
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="cylinder_inertial_matrix" params="m r h">
+        <inertial>
+            <mass value="${m}" />
+	    <inertia ixx="0" ixy = "0" ixz = "0"
+                iyy="0" iyz = "0"
+                izz="0" /> 
+            <!--mass value="${m}" />
+            <inertia ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0"
+                iyy="${m*(3*r*r+h*h)/12}" iyz = "0"
+                izz="${m*r*r/2}" /--> 
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="box_inertial_matrix" params="m w h d">
+        <inertial>
+            <mass value="${m}" />
+            <inertia ixx="${m*(h*h+d*d)/12}" ixy = "0" ixz = "0"
+                iyy="${m*(w*w+d*d)/12}" iyz = "0"
+                izz="${m*(w*w+h*h)/12}" /> 
+        </inertial>
+    </xacro:macro>
+
+
+
+
+    <!-- BASE-FOOTPRINT -->
+    <!-- base_footprint is a fictitious link(frame) that is on the ground right below base_link origin -->
+    <xacro:macro name="mrobot_body">
+        <link name="base_footprint">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.001 0.001 0.001" />
+                </geometry>
+            </visual>
+        </link>
+
+        <joint name="base_footprint_joint" type="fixed">
+            <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0" />
+            <parent link="base_footprint"/>
+            <child link="base_link" />
+        </joint>
+
+        <!-- BASE-LINK -->
+        <!--Actual body/chassis of the robot-->
+        <link name="base_link">
+            <cylinder_inertial_matrix  m="${base_mass}" r="${base_link_radius}" h="${base_link_length}" />
+            <visual>
+                <origin xyz="-0.3 -0.225 0.2" rpy="3.1415926 0 1.5707963" />
+                <geometry>
+                    <mesh filename="package://mrobot_gazebo/meshes/RoboMaster3.STL" />
+                </geometry>
+                <material name="yellow" />
+            </visual>
+
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.6 0.45 0.5" />
+                </geometry>
+            </collision>   
+        </link>
+        <gazebo reference="base_link">
+            <material>Gazebo/Blue</material>
+        </gazebo>
+
+        <!-- Wheel Definitions -->
+        <wheel lr="right"  translateY="1" />
+        <wheel lr="left"  translateY="-1" />
+
+        <!-- Casters Definitions -->
+        <caster fb="front"  translateX="-1" />
+
+
+
+        <!-- plate Definitions -->
+        <plate num="1"  parent="base_link" />
+        <plate num="2"  parent="plate_1_link" />
+
+        <!-- controller -->
+        <gazebo>
+	  <plugin name="base_controller" filename="libgazebo_ros_planar_move.so">
+	    <commandTopic>cmd_vel2</commandTopic>
+	    <odometryTopic>odom2</odometryTopic>
+	    <odometryFrame>/odom</odometryFrame>
+	    <odometryRate>100.0</odometryRate>
+	    <robotBaseFrame>base_footprint2</robotBaseFrame>
+	    <broadcastTF>true</broadcastTF>
+	  </plugin>
+	</gazebo>
+
+    </xacro:macro>
+</robot>

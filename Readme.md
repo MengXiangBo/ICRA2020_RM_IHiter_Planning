@@ -53,7 +53,7 @@ glog是一款谷歌开源的日志管理工具。下载和安装方法可以参�
 
 # **4. 编译、安装方式**
 克隆代码至本地仓库：
-```git clone https://github.com/raulmur/ORB_SLAM2.git Planning```
+```git clone https://github.com/MengXiangBo/ICRA2020_RM_IHiter_Planning.git Planning```
 执行如下代码：
  ```
 cd localization

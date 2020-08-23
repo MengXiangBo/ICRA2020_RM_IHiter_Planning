@@ -204,7 +204,10 @@ roslaunch mrobot_gazebo navdemo1.launch
 <p align="center">图7-7 速度规划</p> 
 2.直线和圆弧的计算  
 
-S是起点，E是终点，P是当前位置， ![img]("https://latex.codecogs.com/gif.latex?%5CDelta%20L")是横向距离，L是纵向距离，$\alpha$是导航角。需要根据三个位置来计算当前的横向和纵向距离，以此来进行梯形规划和PID计算。
+![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L)  
+
+
+S是起点，E是终点，P是当前位置， ![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L)是横向距离，L是纵向距离，$\alpha$是导航角。需要根据三个位置来计算当前的横向和纵向距离，以此来进行梯形规划和PID计算。
 在直线中，$L|SE| = |SE \bullet PE|$ ,$\Delta L = |SE \times PE|$  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/6.png" width="40%" alt="" /></p>  
 在圆弧中，O'是圆心，$L = |O'S|\arccos \frac{{|OP \bullet OE|}}{{|OP||OE|}}$，$\Delta L = |O'P| - |O'S|$

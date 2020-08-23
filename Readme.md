@@ -181,7 +181,7 @@ roslaunch mrobot_gazebo navdemo1.launch
   <br>
   <img style="display: block; margin: 0 auto;" src="https://latex.codecogs.com/gif.latex?F_i%20%3D%5Cbegin%7Bcases%7D%20%7B%5Cfrac%7B%7Br_0%5E2%7BF_0%7D%7D%7D%7B%7Br_i%5E2%7D%7D%7D%2C%20%26%20%7B%7Br_i%7D%20%5Cge%20r%7D%20%5C%5C%20F_0%2C%20%26%20%7B%7Br_i%7D%20%3C%20r%7D%20%5Cend%7Bcases%7D" />
 </p>  
-其中，$F_i$为排斥力，$r_i$为机器人边缘与障碍物的距离，$F_0$为最大排斥力，$r_0$为有效距离。
+其中，![img](https://latex.codecogs.com/gif.latex?F_i)为排斥力，![img](https://latex.codecogs.com/gif.latex?r_i)为机器人边缘与障碍物的距离，![img](https://latex.codecogs.com/gif.latex?F_0)为最大排斥力，![img](https://latex.codecogs.com/gif.latex?r_0)为有效距离。
 如果有多个障碍物对机器人产生影响，则求多个“排斥力”的加权平均数。  
 <p align="center">
   <br>
@@ -203,14 +203,10 @@ roslaunch mrobot_gazebo navdemo1.launch
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/5.png" width="40%" alt="" /></p>  
 <p align="center">图7-7 速度规划</p> 
 2.直线和圆弧的计算  
-
-![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L)  
-
-
-S是起点，E是终点，P是当前位置， ![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L)是横向距离，L是纵向距离，$\alpha$是导航角。需要根据三个位置来计算当前的横向和纵向距离，以此来进行梯形规划和PID计算。
-在直线中，$L|SE| = |SE \bullet PE|$ ,$\Delta L = |SE \times PE|$  
+S是起点，E是终点，P是当前位置，![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L)是横向距离，L是纵向距离，![img](https://latex.codecogs.com/gif.latex?%5Calpha)是导航角。需要根据三个位置来计算当前的横向和纵向距离，以此来进行梯形规划和PID计算。
+在直线中，![img](https://latex.codecogs.com/gif.latex?L%7CSE%7C%20%3D%20%7CSE%20%5Cbullet%20PE%7C) ![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L%20%3D%20%7CSE%20%5Ctimes%20PE%7C)  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/6.png" width="40%" alt="" /></p>  
-在圆弧中，O'是圆心，$L = |O'S|\arccos \frac{{|OP \bullet OE|}}{{|OP||OE|}}$，$\Delta L = |O'P| - |O'S|$
+在圆弧中，O'是圆心，![img](https://latex.codecogs.com/gif.latex?L%20%3D%20%7CO%27S%7C%5Carccos%20%5Cfrac%7B%7B%7COP%20%5Cbullet%20OE%7C%7D%7D%7B%7B%7COP%7C%7COE%7C%7D%7D)，![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L%20%3D%20%7CO%27P%7C%20-%20%7CO%27S%7C)  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/7.png" width="40%" alt="" /></p>  
 
 # **8.数据流图及软件框图**  

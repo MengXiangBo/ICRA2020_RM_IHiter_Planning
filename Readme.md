@@ -177,10 +177,12 @@ roslaunch mrobot_gazebo navdemo1.launch
 ### ***b. 局部规划***
 局部路径规划采用是人工势场法的思路，将全局规划出的路径作为参考路径，参考路径对机器人有“引导力”，而机器人通过激光雷达检测出的障碍物（静态障碍物和机器人）对机器人具有“排斥力”，当机器人距离障碍物距离大于设定的距离时，“排斥力”消失。
 黑色实线是由激光雷达采集的数据拟合出的障碍物轮廓线，绿色实线是机器人的轮廓，红色实线是距离机器人轮廓过近的障碍物，此时，障碍物会对机器人产生一个“排斥力”，方向垂直于障碍物表面。  
+
 <p align="center">
   <br>
   <img style="display: block; margin: 0 auto;" src="https://latex.codecogs.com/gif.latex?F_i%20%3D%5Cbegin%7Bcases%7D%20%7B%5Cfrac%7B%7Br_0%5E2%7BF_0%7D%7D%7D%7B%7Br_i%5E2%7D%7D%7D%2C%20%26%20%7B%7Br_i%7D%20%5Cge%20r%7D%20%5C%5C%20F_0%2C%20%26%20%7B%7Br_i%7D%20%3C%20r%7D%20%5Cend%7Bcases%7D" />
 </p>  
+
 其中，![img](https://latex.codecogs.com/gif.latex?F_i)为排斥力，![img](https://latex.codecogs.com/gif.latex?r_i)为机器人边缘与障碍物的距离，![img](https://latex.codecogs.com/gif.latex?F_0)为最大排斥力，![img](https://latex.codecogs.com/gif.latex?r_0)为有效距离。
 如果有多个障碍物对机器人产生影响，则求多个“排斥力”的加权平均数。  
 <p align="center">
@@ -193,6 +195,7 @@ roslaunch mrobot_gazebo navdemo1.launch
 ### ***c. 多机器人路径规划***
 进行多机器人路径规划时，根据任务的优先级，设定主从机器人，主机器人的路径规划仍然按照单机器人来进行，从机器人将主机器人看作动态障碍物，不同于敌方机器人这一类动态障碍物，主机器人的运动是已知的，故可以将主机器人的路径作为约束路径来实现从机器人的规划。  
 在提前知道主从机器人规划的路径后，预测两个机器人是否会相撞，若在某一点附近相撞，则修改从机器人速度或者将相撞点附近视为不可行，通过全局规划重新规划路径。  
+
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/4.png" width="100%" alt="" /></p>  
 <p align="center">图7-6 多机规划</p> 
 
@@ -200,13 +203,18 @@ roslaunch mrobot_gazebo navdemo1.launch
 1.速度控制  
 
 将机器人速度分为沿路径速度和垂直路径速度，在沿路径方向，采用梯形规划+加速度前馈的控制方式，使前进速度平滑。在垂直路径方向，采用带死区的有限积分PID。  
+
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/5.png" width="40%" alt="" /></p>  
-<p align="center">图7-7 速度规划</p> 
+<p align="center">图7-7 速度规划</p>  
+
 2.直线和圆弧的计算  
 S是起点，E是终点，P是当前位置，![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L)是横向距离，L是纵向距离，![img](https://latex.codecogs.com/gif.latex?%5Calpha)是导航角。需要根据三个位置来计算当前的横向和纵向距离，以此来进行梯形规划和PID计算。
 在直线中，![img](https://latex.codecogs.com/gif.latex?L%7CSE%7C%20%3D%20%7CSE%20%5Cbullet%20PE%7C) ![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L%20%3D%20%7CSE%20%5Ctimes%20PE%7C)  
+
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/6.png" width="40%" alt="" /></p>  
+
 在圆弧中，O'是圆心，![img](https://latex.codecogs.com/gif.latex?L%20%3D%20%7CO%27S%7C%5Carccos%20%5Cfrac%7B%7B%7COP%20%5Cbullet%20OE%7C%7D%7D%7B%7B%7COP%7C%7COE%7C%7D%7D)，![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L%20%3D%20%7CO%27P%7C%20-%20%7CO%27S%7C)  
+
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/7.png" width="40%" alt="" /></p>  
 
 # **8.数据流图及软件框图**  

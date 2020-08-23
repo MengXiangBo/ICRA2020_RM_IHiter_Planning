@@ -166,6 +166,7 @@ roslaunch mrobot_gazebo navdemo1.launch
 用路径中相邻直线的角度值来评价平滑度，角度越小则越平滑，在原有的计算式中加入平滑度计算，为:  
 
 <p align="center">
+  <br><br>
   <img style="display: block; margin: 0 auto;" src="https://latex.codecogs.com/gif.latex?rhs%28u%29%20%3D%20%5Cmin%20%5Climits_%7Bs%27%20%5Cin%20Succ%28u%29%7D%20%28c%28u.s%27%29%20&plus;%20g%28s%27%29%20&plus;%20%5Clambda%20%5Ctheta%20%28s%27%29%29" />
 </p>
 通过增加权重系数，将多目标问题转化为单目标问题，在原有的算法框架下进行路径规划，通过调整权重系数的大小，可以改变路径对平滑度的倾向程度。  

@@ -167,7 +167,7 @@ roslaunch mrobot_gazebo navdemo1.launch
 
 <p align="center"><img style="display: block; margin: 0 auto;" src="https://latex.codecogs.com/gif.latex?rhs%28u%29%20%3D%20%5Cmin%20%5Climits_%7Bs%27%20%5Cin%20Succ%28u%29%7D%20%28c%28u.s%27%29%20&plus;%20g%28s%27%29%20&plus;%20%5Clambda%20%5Ctheta%20%28s%27%29%29"></p>  
 
-![img]("https://latex.codecogs.com/gif.latex?rhs%28u%29%20%3D%20%5Cmin%20%5Climits_%7Bs%27%20%5Cin%20Succ%28u%29%7D%20%28c%28u.s%27%29%20&plus;%20g%28s%27%29%20&plus;%20%5Clambda%20%5Ctheta%20%28s%27%29%29")  
+![img](https://latex.codecogs.com/gif.latex?rhs%28u%29%20%3D%20%5Cmin%20%5Climits_%7Bs%27%20%5Cin%20Succ%28u%29%7D%20%28c%28u.s%27%29%20&plus;%20g%28s%27%29%20&plus;%20%5Clambda%20%5Ctheta%20%28s%27%29%29)  
 $$rhs(u) = \min \limits_{s' \in Succ(u)} (c(u.s') + g(s') + \lambda \theta (s'))$$  
 通过增加权重系数，将多目标问题转化为单目标问题，在原有的算法框架下进行路径规划，通过调整权重系数的大小，可以改变路径对平滑度的倾向程度。  
 在生成一条可行路径后，对路径点进行简化，删除一些不必要的路径点。首先，对于共线的多个点，保留两端的点，删除中间点；其次，在路径点序列中，如果第 个点与第 个点之间的直线路径是无碰的，则删除第 个路径点。采用的是圆弧过渡对折线路径进行平滑处理，可以保证平滑后的路径是安全的。  

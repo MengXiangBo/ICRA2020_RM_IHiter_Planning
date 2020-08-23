@@ -209,7 +209,7 @@ roslaunch mrobot_gazebo navdemo1.launch
 
 2.直线和圆弧的计算  
 S是起点，E是终点，P是当前位置，![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L)是横向距离，L是纵向距离，![img](https://latex.codecogs.com/gif.latex?%5Calpha)是导航角。需要根据三个位置来计算当前的横向和纵向距离，以此来进行梯形规划和PID计算。
-在直线中，![img](https://latex.codecogs.com/gif.latex?L%7CSE%7C%20%3D%20%7CSE%20%5Cbullet%20PE%7C) ![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L%20%3D%20%7CSE%20%5Ctimes%20PE%7C)  
+在直线中，![img](https://latex.codecogs.com/gif.latex?L%7CSE%7C%20%3D%20%7CSE%20%5Cbullet%20PE%7C)，![img](https://latex.codecogs.com/gif.latex?%5CDelta%20L%20%3D%20%7CSE%20%5Ctimes%20PE%7C)  
 
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/6.png" width="40%" alt="" /></p>  
 

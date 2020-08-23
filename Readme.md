@@ -8,15 +8,15 @@
 定位算法十分轻量化，在i7-6700HQ平台上平均每帧计算时间约为1.5ms，对计算资源占用较少。在仿真环境下测试定位精度可以达到rmse误差8.1cm，绝对误差平均值7.3cm。仿真环境里程记和激光雷达添加了较大噪音，在瓷砖地面实际测试慢速（不打滑）情况下多次运行的轨迹基本重合。定位算法剔除映射在nearst map中概率较小的激光点，实现了动态物体剔除功能。  
 机器人路径规划算法可以快速准确地规划出起始点到目标点的路径，经过多次测试，在地图上规划一次路径所需要的时间在0.2ms左右。在机器人检测到动态障碍物时，能够有效地规划出新路径避开该障碍物。能在已知己方另一辆机器人路径的前提下，规划出与之不冲突的路径。局部路径规划能使机器人与检测到的障碍物保持一定距离，从而顺利通过路径。机器人运动控制算法能够处理直线和圆弧子路径，对机器人的控制频率能够达到1ms。
 <p align="center"><img style="display: block; margin: 0 auto;" src="GIF/定位仿真.gif" width="80%" alt="" /></p>  
-<p align="center"><b>定位仿真 蓝色：groundtruth 红色：定位结果</b></p>  
+<p align="center">定位仿真 蓝色：groundtruth 红色：定位结果</p>  
 <p align="center"><img style="display: block; margin: 0 auto;" src="GIF/定位.gif" width="80%" alt="" /></p>  
-<p align="center"><b>定位</b></p>  
+<p align="center">定位</p>  
 <p align="center"><img style="display: block; margin: 0 auto;" src="GIF/规划静态.gif" width="80%" alt="" /></p>  
-<p align="center"><b>静态规划</b></p>  
+<p align="center">静态规划</p>  
 <p align="center"><img style="display: block; margin: 0 auto;" src="GIF/规划动态.gif" width="80%" alt="" /></p>  
-<p align="center"><b>动态规划</b></p>  
+<p align="center">动态规划</p>  
 <p align="center"><img style="display: block; margin: 0 auto;" src="GIF/规划实验.gif" width="80%" alt="" /></p>  
-<p align="center"><b>路径规划实验效果</b></p>  
+<p align="center">路径规划实验效果</p>  
 
 # **3. 依赖工具，软、硬件环境**
 **软件部分：**  
@@ -149,19 +149,19 @@ roslaunch mrobot_gazebo navdemo1.launch
 在此基础上增量式ICP方法在初始误差较大时容易产生局部次优解并且在运行过程中逐渐发散，即使使用比较耗时的全局地图匹配也可能由于估计不足而产生发散现象。与此对应的粒子滤波方法，有较高的鲁棒性，不容易丢失，但是比较耗时，往往需要对性能和精度进行取舍。  
 &emsp;&emsp;为了实现高效鲁棒的定位效果，我们设计了以相邻帧间ICP，局部地图ICP，全局地图匹配为基础，辅之以粒子滤波重定位的高效定位方案。且能够去除动态点，实现机器人的稳定运行。算法运行过程如图所示：  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/定位.png" width="100%" alt="" /></p>  
-<p align="center"><b>图7-1 定位算法流程</b></p>   
+<p align="center">图7-1 定位算法流程</p>   
 &emsp;&emsp;首先根据地图坐标点距离障碍物间的距离构建cost_map，每个坐标点的数值与距离最近障碍物表面的距离成反比。使用粒子滤波算法对机器人初始位姿进行估计，之后每一帧激光雷达数据都与前一帧或前几帧的数据进行SVD ICP匹配。当累计运行距离或时间超过某一阈值，自动进行局部地图匹配。将多个关联帧间的增量信息累计作为初始化位姿，与当前帧进行匹配以修正局部地图位姿估计误差。在以局部地图修正后的姿态作为初始值，在cost_map上进行全局位置匹配，获得绝对位置。全局匹配的过程激光点置信距离会随着机器人运动速度加快而增大，以适应高速运动引起的数据撕裂。过程中一旦检测到数据发散，立刻切换到粒子滤波重定位模式。  
 
 &emsp;&emsp;随着运行时间的增长，里程计角度误差将逐渐超过全局ICP角度计算精度，在此情况下，通过全局匹配获得的绝对角度来修正里程计角度偏差。修正后的里程计增量输入重新与地图坐标系重合，保证了里程计先验信息输入的稳定性。  
 &emsp;&emsp;经测算，在实际环境和仿真环境下，通过Intel i7-6700HQ运行算法平均计算时间可达1.8ms。图为关闭避障功能情况下机器人在实际场地中使用定位数据运行巡逻任务得到的定位效果图，可以看出，多次巡逻路径基本重合。巡逻时间5分钟，未触发重定位功能。  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/定位效果.png" width="100%" alt="" /></p>  
-<p align="center"><b>图7-2 定位算法效果</b></p>  
+<p align="center">图7-2 定位算法效果</p>  
 
 ## 2. 运动规划  
 ### ***a.全局规划***  
 多目标D*Lite算法基于D*Lite算法，并在计算移动代价时加入转角代价，用于搜寻地图上一条移动代价最小的可行路径。D*Lite算法采用反向搜索的方式，能够很好地处理机器人移动过程中出现的未知障碍物。其算法核心在于假设了未知区域都是自由空间，以此为基础，增量式地实现路径规划，通过最小化rhs值找到目标点到各个节点的最短距离。若前行过程中发现障碍物则将障碍物所对应环境地图位置设置为障碍物空间，并再以之为起点利用“路径场”信息重新规划出一条路径来。此时不仅更新规划路径的节点数据，也要更新智能体遍历过的节点。  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/1.png" width="65%" alt="" /></p>  
-<p align="center"><b>图7-3 路径点</b></p>  
+<p align="center">图7-3 路径点</p>  
 在地图上选取若干路径点作为全局路径规划的中间点，如图3所示，各个路径点用黑色空心圆圈表示，（其中包括加成/惩罚区域，用蓝色实心圆圈表示）每个路径点与邻近点之间可以直线移动，机器人运行过程中，给定机器人的路径规划终点，并从定位系统中获取机器人的当前位置作为起点。每次执行规划任务时，将起点和终点加入到路径点的集合中，并通过直线与障碍物的碰撞检测来确定起点和终点的邻点，红色实心圆圈为起点或终点，红色实线为通过碰撞检测的路径，红色虚线为未通过碰撞检测的路径，将红色实线加入到可行边的集合中。  
 用路径中相邻直线的角度值来评价平滑度，角度越小则越平滑，在原有的计算式中加入平滑度计算，为:  
 <p align="center">
@@ -172,7 +172,7 @@ roslaunch mrobot_gazebo navdemo1.launch
 在生成一条可行路径后，对路径点进行简化，删除一些不必要的路径点。首先，对于共线的多个点，保留两端的点，删除中间点；其次，在路径点序列中，如果第 个点与第 个点之间的直线路径是无碰的，则删除第 个路径点。采用的是圆弧过渡对折线路径进行平滑处理，可以保证平滑后的路径是安全的。  
 在检测到动态障碍物后，根据其位置判断是否阻挡下一段可行路径，若阻挡，则利用原有的路径场更新周围节点。 
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/2.png" width="100%" alt="" /></p>  
-<p align="center"><b>图7-4 全局规划</b></p>  
+<p align="center">图7-4 全局规划</p>  
 
 ### ***b. 局部规划***
 局部路径规划采用是人工势场法的思路，将全局规划出的路径作为参考路径，参考路径对机器人有“引导力”，而机器人通过激光雷达检测出的障碍物（静态障碍物和机器人）对机器人具有“排斥力”，当机器人距离障碍物距离大于设定的距离时，“排斥力”消失。
@@ -188,23 +188,23 @@ roslaunch mrobot_gazebo navdemo1.launch
   <img style="display: block; margin: 0 auto;" src="https://latex.codecogs.com/gif.latex?F%20%3D%20%5Csum%5Climits_i%20%7B%7B%5Calpha%20_i%7D%7BF_i%7D%7D" />
 </p>  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/3.png" width="100%" alt="" /></p>  
-<p align="center"><b>图7-5 局部规划</b></p>  
+<p align="center">图7-5 局部规划</p>  
 
 ### ***c. 多机器人路径规划***
 进行多机器人路径规划时，根据任务的优先级，设定主从机器人，主机器人的路径规划仍然按照单机器人来进行，从机器人将主机器人看作动态障碍物，不同于敌方机器人这一类动态障碍物，主机器人的运动是已知的，故可以将主机器人的路径作为约束路径来实现从机器人的规划。  
 在提前知道主从机器人规划的路径后，预测两个机器人是否会相撞，若在某一点附近相撞，则修改从机器人速度或者将相撞点附近视为不可行，通过全局规划重新规划路径。  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/4.png" width="100%" alt="" /></p>  
-<p align="center"><b>图7-6 多机规划</b></p> 
+<p align="center">图7-6 多机规划</p> 
 
 ### ***d.运动控制原理：***
 1.速度控制  
 
 将机器人速度分为沿路径速度和垂直路径速度，在沿路径方向，采用梯形规划+加速度前馈的控制方式，使前进速度平滑。在垂直路径方向，采用带死区的有限积分PID。  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/5.png" width="40%" alt="" /></p>  
-<p align="center"><b>图7-7 速度规划</b></p> 
+<p align="center">图7-7 速度规划</p> 
 2.直线和圆弧的计算  
 
-S是起点，E是终点，P是当前位置， $\Delta L$是横向距离，L是纵向距离，$\alpha$是导航角。需要根据三个位置来计算当前的横向和纵向距离，以此来进行梯形规划和PID计算。
+S是起点，E是终点，P是当前位置， ![img]("https://latex.codecogs.com/gif.latex?%5CDelta%20L")是横向距离，L是纵向距离，$\alpha$是导航角。需要根据三个位置来计算当前的横向和纵向距离，以此来进行梯形规划和PID计算。
 在直线中，$L|SE| = |SE \bullet PE|$ ,$\Delta L = |SE \times PE|$  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/6.png" width="40%" alt="" /></p>  
 在圆弧中，O'是圆心，$L = |O'S|\arccos \frac{{|OP \bullet OE|}}{{|OP||OE|}}$，$\Delta L = |O'P| - |O'S|$
@@ -212,8 +212,8 @@ S是起点，E是终点，P是当前位置， $\Delta L$是横向距离，L是�
 
 # **8.数据流图及软件框图**  
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/数据流.png" width="80%" alt="" /></p>  
-<p align="center"><b>图8-1 运动规划数据流</b></p> 
+<p align="center">图8-1 运动规划数据流</p> 
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/软件框图.png" width="80%" alt="" /></p>  
-<p align="center"><b>图8-2 Planning软件框图</b></p> 
+<p align="center">图8-2 Planning软件框图</p> 
 <p align="center"><img style="display: block; margin: 0 auto;" src="PIC/总框图.png" width="80%" alt="" /></p>  
-<p align="center"><b>图8-3 总数据流框图</b></p> 
+<p align="center">图8-3 总数据流框图</p> 

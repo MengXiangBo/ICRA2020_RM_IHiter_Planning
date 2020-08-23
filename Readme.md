@@ -1,3 +1,4 @@
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>  
 该项目是ICRA2020 AI Challenge I Hiter战队的Planning功能代码展示
 # **1. 软件功能介绍**  
 规划部分软件包括**机器人定位**和**机器人路径规划**两个功能。其中：
@@ -191,7 +192,7 @@ $$F = \sum\limits_i {{\alpha _i}{F_i}} $$
 ### ***d.运动控制原理：***
 1.速度控制  
 
-将机器人速度分为沿路径速度和垂直路径速度，在沿路径方向，采用梯形规划+加速度前馈的控制方式，使前进速度平滑。在垂直路径方向，采用带死区的有限积分PID。
+将机器人速度分为沿路径速度和垂直路径速度，在沿路径方向，采用梯形规划+加速度前馈的控制方式，使前进速度平滑。在垂直路径方向，采用带死区的有限积分PID。  
 <img style="display: block; margin: 0 auto;" src="PIC/5.png" width="40%" alt="" />  
 <center>图7-7 速度规划</center>    
 2.直线和圆弧的计算  
